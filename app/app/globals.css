@@ -49,11 +49,11 @@
   --color-tertiary-fixed: #eae2ce;
   --color-on-primary: #680008;
 
-  --font-headline-lg: "Spline Sans", sans-serif;
-  --font-headline-md: "Spline Sans", sans-serif;
-  --font-label-sm: "Newsreader", serif;
-  --font-body-md: "Newsreader", serif;
-  --font-body-lg: "Newsreader", serif;
+  --font-headline-lg: var(--font-limelight), sans-serif;
+  --font-headline-md: var(--font-limelight), sans-serif;
+  --font-label-sm: var(--font-newsreader), serif;
+  --font-body-md: var(--font-newsreader), serif;
+  --font-body-lg: var(--font-newsreader), serif;
   
   --spacing-container-max: 1200px;
   --spacing-gutter: 24px;
