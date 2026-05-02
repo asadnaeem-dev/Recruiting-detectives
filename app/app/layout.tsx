@@ -40,10 +40,9 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`dark ${limelight.variable} ${newsreader.variable} ${playfair.variable} ${specialElite.variable} h-full antialiased`}
+      className={`${limelight.variable} ${newsreader.variable} ${playfair.variable} ${specialElite.variable} h-full antialiased`}
     >
-      <body className="bg-background text-on-background selection:bg-primary-container selection:text-white overflow-x-hidden min-h-full flex flex-col font-body-md">
-        <div className="grainy-overlay"></div>
+      <body suppressHydrationWarning className="text-stone-900 selection:bg-primary-container selection:text-white overflow-x-hidden min-h-full flex flex-col font-body-md" style={{ backgroundColor: "#fdfaf5" }}>
         {children}
       </body>
     </html>

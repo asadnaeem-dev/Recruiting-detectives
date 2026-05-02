@@ -27,21 +27,20 @@ export default function SwitchboardGame() {
   const svgRef = useRef<SVGSVGElement>(null);
 
   const sourcePorts = {
-    red: { x: 100, y: 350, color: "#d32f2f" },
-    green: { x: 300, y: 350, color: "#388e3c" },
-    blue: { x: 500, y: 350, color: "#1976d2" },
+    green: { x: 150, y: 340, color: "#1e8449", glow: "rgba(0,0,0,0.2)" },
+    red:   { x: 300, y: 340, color: "#a93226", glow: "rgba(0,0,0,0.2)" },
+    blue:  { x: 450, y: 340, color: "#21618c", glow: "rgba(0,0,0,0.2)" },
   };
 
   const targetPorts = {
-    port1: { x: 100, y: 100 },
-    port2: { x: 300, y: 100 },
-    port3: { x: 500, y: 100 },
+    port1: { x: 150, y: 110 },
+    port2: { x: 300, y: 110 },
+    port3: { x: 450, y: 110 },
   };
 
   const handlePointerDown = (wire: WireId) => {
     if (isSolved) return;
     setDraggingWire(wire);
-    // Disconnect if already connected
     setConnections((prev) =>
       prev.map((c) => (c.wire === wire ? { ...c, target: null } : c))
     );
@@ -49,8 +48,7 @@ export default function SwitchboardGame() {
 
   const handlePointerMove = (e: React.PointerEvent<SVGSVGElement>) => {
     if (!draggingWire || !svgRef.current) return;
-    // Call e.preventDefault to stop scrolling on mobile touch
-    e.preventDefault(); 
+    e.preventDefault();
     const rect = svgRef.current.getBoundingClientRect();
     const x = ((e.clientX - rect.left) / rect.width) * 600;
     const y = ((e.clientY - rect.top) / rect.height) * 450;
@@ -59,21 +57,19 @@ export default function SwitchboardGame() {
 
   const handlePointerUp = () => {
     if (!draggingWire) return;
-    
-    // Check if near any target port
+
     let connectedPort: PortId | null = null;
     for (const [portId, pos] of Object.entries(targetPorts)) {
       const dx = pos.x - mousePos.x;
       const dy = pos.y - mousePos.y;
       const distance = Math.sqrt(dx * dx + dy * dy);
-      if (distance < 40) {
+      if (distance < 45) {
         connectedPort = portId as PortId;
         break;
       }
     }
 
     if (connectedPort) {
-      // Check if port is already taken by another wire, if so disconnect it
       setConnections((prev) => {
         const newConns = prev.map((c) =>
           c.target === connectedPort ? { ...c, target: null } : c
@@ -87,12 +83,17 @@ export default function SwitchboardGame() {
     setDraggingWire(null);
   };
 
-  // Check win condition
+  // Check win condition — blue→port1, green→port2, red→port3
+  // (meaning order left-to-right is: blue, green, red → red is immediately right of green, so green is immediately left of red → "red goes on the immediate left of green" reversed... )
+  // Wait: clue is "red goes on the immediate LEFT of green" → red=port1? No:
+  // "red goes on the immediate left of green" → red is LEFT of green.
+  // left-to-right ports: port1 port2 port3
+  // So red=port1, green=port2. Blue gets port3.
   useEffect(() => {
     const isWin =
-      connections.find((c) => c.wire === "blue")?.target === "port1" &&
+      connections.find((c) => c.wire === "red")?.target === "port1" &&
       connections.find((c) => c.wire === "green")?.target === "port2" &&
-      connections.find((c) => c.wire === "red")?.target === "port3";
+      connections.find((c) => c.wire === "blue")?.target === "port3";
 
     if (isWin && !isSolved) {
       setTimeout(() => setIsSolved(true), 500);
@@ -102,170 +103,237 @@ export default function SwitchboardGame() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (recruitedName.trim() !== "") {
-      // Store the name so the dashboard can display it
       localStorage.setItem("detectiveName", recruitedName.trim());
-      // Navigate to dashboard
       router.push("/dashboard");
     }
   };
 
+  // Port label letters
+  const portLabels = ["I", "II", "III"];
+
   return (
-    <section className="max-w-container-max mx-auto px-margin py-12">
-      <div className="bg-stone-800 border-[3px] border-black hard-shadow p-8 rounded-none relative">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-gutter">
-          {/* Left Clues Panel */}
-          <div className="space-y-4 z-10 relative">
-            <div className="bg-tertiary-container border-[3px] border-black p-4 rotate-[-1deg]">
-              <h3 className="font-headline-md text-on-tertiary-container mb-2 uppercase border-b-2 border-black">
-                The Clues
-              </h3>
-              <ul className="space-y-2 font-label-sm text-on-tertiary-container list-none">
-                <li className="flex items-center gap-2">
-                  <span className="material-symbols-outlined">radio_button_checked</span>
-                  Blue connects to the first port on the left.
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="material-symbols-outlined">radio_button_checked</span>
-                  Red goes on the right of Green.
-                </li>
-              </ul>
-            </div>
-            <img
-              className="w-full h-48 object-cover border-[3px] border-black hard-shadow-small grayscale contrast-125"
-              data-alt="Vintage typewriter"
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuB7Xx4x2a-veudu4b-pzxDzh8rTP3oxoMK9X0GSdX9858CGxlBs0Zmm4u90OUYwFtnU5BxohUhFaqPgsqXns5i3vVOndEdWc7pQeNC-FXLeWsyF0HPLkEKnaCg2z76eYSrRuKCs7eUIci5PLIDd_Yg6CmhtGkK79FZbQgSA2DyWI_CzUKfQm09K8e5T0BY48dHqlhhIDr8ssuIpbVl8yo34rPOpBAR7PyX1ReYOL0Fq4tN3VgMz_RtXSijkf56RG41_tcrPBlerYCit"
-            />
-          </div>
+    <section className="flex flex-col items-center justify-center w-full">
+      {/* The Puzzle Frame */}
+      <div
+        className="relative"
+        style={{
+          background: "#fdfaf5",
+          border: "4px solid #1a1a1a",
+          borderRadius: "8px",
+          boxShadow: "8px 8px 0 #1a1a1a",
+          width: "min(600px, 95vw)",
+        }}
+      >
+        {/* Subtle header line */}
+        <div className="flex items-center justify-center pt-8 pb-4">
+          <div style={{ height: "2px", flex: 1, background: "#1a1a1a", marginLeft: "24px" }} />
+          <span
+            style={{
+              fontFamily: "var(--font-limelight), sans-serif",
+              color: "#1a1a1a",
+              fontSize: "0.85rem",
+              letterSpacing: "0.4em",
+              textTransform: "uppercase",
+              padding: "0 20px",
+            }}
+          >
+            Switchboard
+          </span>
+          <div style={{ height: "2px", flex: 1, background: "#1a1a1a", marginRight: "24px" }} />
+        </div>
 
-          {/* Main Switchboard Hub */}
-          <div className="md:col-span-2 bg-stone-900 border-[3px] border-black p-6 relative select-none">
-            <div className="flex justify-between items-center mb-8 relative z-10 pointer-events-none">
-              <span className={`font-headline-md ${isSolved ? 'text-green-400' : 'text-primary'}`}>
-                STATUS: {isSolved ? 'CONNECTION SECURED' : 'FRANTIC'}
-              </span>
-              <div className="flex gap-2">
-                <div className={`w-4 h-4 rounded-full border-2 border-black ${isSolved ? 'bg-green-500' : 'bg-primary-container animate-pulse'}`}></div>
-                <div className="w-4 h-4 rounded-full bg-on-tertiary border-2 border-black"></div>
-              </div>
-            </div>
+        {/* SVG Game Area */}
+        <div
+          className="relative touch-none select-none"
+          style={{ aspectRatio: "600/450", width: "100%" }}
+        >
+          <svg
+            ref={svgRef}
+            viewBox="0 0 600 450"
+            className="w-full h-full absolute top-0 left-0"
+            onPointerMove={handlePointerMove}
+            onPointerUp={handlePointerUp}
+            onPointerLeave={handlePointerUp}
+          >
+            <defs>
+              <filter id="glow-solved">
+                <feGaussianBlur stdDeviation="4" result="blur" />
+                <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+              </filter>
+            </defs>
 
-            {/* SVG Game Layer */}
-            <div className="relative w-full aspect-[4/3] bg-black/50 border-2 border-stone-700 overflow-hidden touch-none">
-              <svg
-                ref={svgRef}
-                viewBox="0 0 600 450"
-                className="w-full h-full absolute top-0 left-0"
-                onPointerMove={handlePointerMove}
-                onPointerUp={handlePointerUp}
-                onPointerLeave={handlePointerUp}
+            {/* Top rail */}
+            <rect x="60" y="90" width="480" height="4" rx="2" fill="rgba(0,0,0,0.1)" />
+            {/* Bottom rail */}
+            <rect x="60" y="356" width="480" height="4" rx="2" fill="rgba(0,0,0,0.1)" />
+
+            {/* Target Ports */}
+            {Object.entries(targetPorts).map(([portId, pos], i) => {
+              const conn = connections.find((c) => c.target === portId);
+              const wireColor = conn ? sourcePorts[conn.wire as WireId] : null;
+              return (
+                <g key={portId} transform={`translate(${pos.x}, ${pos.y})`}>
+                  {/* Outer ring */}
+                  <circle cx="0" cy="0" r="22" fill="#fff" stroke="#1a1a1a" strokeWidth="3" />
+                  {/* Inner socket */}
+                  <circle cx="0" cy="0" r="12" fill="#e0dcd3" stroke="#1a1a1a" strokeWidth="2" />
+                  {/* Center pin */}
+                  <circle cx="0" cy="0" r="4" fill="#1a1a1a" />
+                  {/* Port label */}
+                  <text x="0" y="-32" textAnchor="middle" fill="#1a1a1a" fontSize="12" fontFamily="var(--font-limelight)" letterSpacing="2" fontWeight="bold">
+                    {portLabels[i]}
+                  </text>
+                </g>
+              );
+            })}
+
+            {/* Wires */}
+            {(["red", "green", "blue"] as WireId[]).map((wire) => {
+              const source = sourcePorts[wire];
+              const conn = connections.find((c) => c.wire === wire);
+              const isDragging = draggingWire === wire;
+
+              let endX = source.x;
+              let endY = source.y + 20;
+
+              if (isDragging) {
+                endX = mousePos.x;
+                endY = mousePos.y;
+              } else if (conn?.target) {
+                endX = targetPorts[conn.target].x;
+                endY = targetPorts[conn.target].y;
+              }
+
+              const dx = Math.abs(endX - source.x);
+              const controlYOffset = Math.max(80, dx * 0.45);
+              const d = `M ${source.x} ${source.y} C ${source.x} ${source.y - controlYOffset}, ${endX} ${endY + controlYOffset}, ${endX} ${endY}`;
+              const isConnected = !!conn?.target;
+
+              return (
+                <g key={`wire-${wire}`}>
+                  {/* Shadow stroke */}
+                  <path
+                    d={d}
+                    fill="none"
+                    stroke="rgba(0,0,0,0.6)"
+                    strokeWidth={16}
+                    strokeLinecap="round"
+                    pointerEvents="none"
+                  />
+                  {/* Main wire */}
+                  <path
+                    d={d}
+                    fill="none"
+                    stroke={source.color}
+                    strokeWidth={10}
+                    strokeLinecap="round"
+                    pointerEvents="none"
+                  />
+                  {/* Highlight sheen */}
+                  <path
+                    d={d}
+                    fill="none"
+                    stroke="rgba(255,255,255,0.3)"
+                    strokeWidth={3}
+                    strokeLinecap="round"
+                    pointerEvents="none"
+                  />
+                </g>
+              );
+            })}
+
+            {/* Source Ports (Draggable handles) */}
+            {(Object.entries(sourcePorts) as [WireId, typeof sourcePorts.red][]).map(([wire, pos]) => (
+              <g
+                key={`source-${wire}`}
+                transform={`translate(${pos.x}, ${pos.y})`}
+                className={isSolved ? "pointer-events-none" : "cursor-pointer"}
+                onPointerDown={(e) => {
+                  e.stopPropagation();
+                  (e.target as Element).setPointerCapture(e.pointerId);
+                  handlePointerDown(wire);
+                }}
               >
-                {/* Target Ports Background*/}
-                <path d="M 0 100 L 600 100" stroke="#444" strokeWidth="20" opacity="0.3" />
-                <path d="M 0 350 L 600 350" stroke="#444" strokeWidth="20" opacity="0.3" />
+                {/* Outer casing */}
+                <circle cx="0" cy="0" r="26" fill="#fff" stroke="#1a1a1a" strokeWidth="3" />
+                {/* Colored plug head */}
+                <circle cx="0" cy="0" r="18" fill={pos.color} />
+                {/* Specular highlight */}
+                <ellipse cx="-5" cy="-6" rx="5" ry="3" fill="rgba(255,255,255,0.4)" />
+                {/* Hover ring */}
+                {!isSolved && (
+                  <circle cx="0" cy="0" r="26" fill="transparent" className="hover:fill-black/5 transition-colors" />
+                )}
+                {/* Wire label */}
+                <text x="0" y="44" textAnchor="middle" fill="#1a1a1a" fontSize="11" fontFamily="var(--font-limelight)" letterSpacing="1" style={{ textTransform: "uppercase" }} fontWeight="bold">
+                  {wire.toUpperCase()}
+                </text>
+              </g>
+            ))}
 
-                {/* Target Ports */}
-                {Object.entries(targetPorts).map(([portId, pos]) => (
-                  <g key={portId} transform={`translate(${pos.x}, ${pos.y})`}>
-                    <circle cx="0" cy="0" r="24" fill="#1a1a1a" stroke="#444" strokeWidth="4" />
-                    <circle cx="0" cy="0" r="10" fill="#000" />
-                  </g>
-                ))}
+            {/* Solved glow overlay */}
+            {isSolved && (
+              <rect x="0" y="0" width="600" height="450" fill="rgba(39,174,96,0.04)" rx="0" pointerEvents="none" />
+            )}
+          </svg>
+        </div>
 
-                {/* Wires */}
-                {["red", "green", "blue"].map((w) => {
-                  const wire = w as WireId;
-                  const source = sourcePorts[wire];
-                  const conn = connections.find((c) => c.wire === wire);
-                  const isDragging = draggingWire === wire;
-
-                  let endX = source.x;
-                  let endY = source.y + 20; // Default dropped state
-
-                  if (isDragging) {
-                    endX = mousePos.x;
-                    endY = mousePos.y;
-                  } else if (conn?.target) {
-                    endX = targetPorts[conn.target].x;
-                    endY = targetPorts[conn.target].y;
-                  }
-
-                  // Calculate rubber-hose bezier curve
-                  const dx = Math.abs(endX - source.x);
-                  const controlYOffset = Math.max(100, dx * 0.5);
-                  const d = `M ${source.x} ${source.y} C ${source.x} ${source.y - controlYOffset}, ${endX} ${endY + controlYOffset}, ${endX} ${endY}`;
-
-                  return (
-                    <path
-                      key={`wire-${wire}`}
-                      d={d}
-                      fill="none"
-                      stroke={source.color}
-                      strokeWidth={12}
-                      strokeLinecap="round"
-                      className="transition-all duration-75"
-                      style={{ filter: "drop-shadow(2px 4px 4px rgba(0,0,0,0.5))" }}
-                      pointerEvents="none"
-                    />
-                  );
-                })}
-
-                {/* Source Ports (Draggable handles) */}
-                {Object.entries(sourcePorts).map(([wire, pos]) => (
-                  <g 
-                    key={`source-${wire}`} 
-                    transform={`translate(${pos.x}, ${pos.y})`}
-                    className={isSolved ? "pointer-events-none" : "cursor-pointer"}
-                    onPointerDown={(e) => {
-                      e.stopPropagation();
-                      (e.target as Element).setPointerCapture(e.pointerId);
-                      handlePointerDown(wire as WireId);
-                    }}
-                  >
-                    <circle cx="0" cy="0" r="24" fill="#1a1a1a" stroke="#444" strokeWidth="4" />
-                    <circle cx="0" cy="0" r="16" fill={pos.color} stroke="#000" strokeWidth="2" />
-                    {/* Highlight when hovering if not solved */}
-                    {!isSolved && <circle cx="0" cy="0" r="24" fill="transparent" className="hover:fill-white/20 transition-colors" />}
-                  </g>
-                ))}
-              </svg>
-            </div>
-            
-            <div className="mt-6 p-4 border-2 border-stone-700 bg-black/40 text-sm font-mono text-stone-400">
-              {isSolved ? (
-                <span className="text-green-400">SYSTEM LOG: ALL CONNECTIONS VERIFIED. ACCESS GRANTED.</span>
-              ) : (
-                <span>SYSTEM LOG: AWAITING CORRECT WIRING SEQUENCE...</span>
-              )}
-            </div>
-          </div>
+        {/* Status strip */}
+        <div
+          className="flex items-center justify-center py-4 px-6"
+          style={{ borderTop: "2px solid #1a1a1a", background: "rgba(0,0,0,0.02)" }}
+        >
+          <span
+            style={{
+              fontFamily: "var(--font-special-elite), monospace",
+              fontSize: "0.85rem",
+              letterSpacing: "0.3em",
+              color: isSolved ? "#1e8449" : "#1a1a1a",
+              textTransform: "uppercase",
+              transition: "color 0.5s",
+              fontWeight: "bold",
+            }}
+          >
+            {isSolved ? "▲  CONNECTION SECURED  ▲" : "AWAITING WIRING SEQUENCE"}
+          </span>
         </div>
       </div>
 
+      {/* Single Hint */}
+      <p
+        className="mt-8 text-center"
+        style={{
+          fontFamily: "var(--font-playfair), serif",
+          color: "#e74c3c",
+          fontSize: "1.2rem",
+          letterSpacing: "0.06em",
+          fontStyle: "italic",
+        }}
+      >
+        Hint: red goes on the immediate left of green.
+      </p>
+
       {/* Success Registration State */}
       {isSolved && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#fdfaf5] p-4 animate-in fade-in duration-500">
-          <div className="relative w-full max-w-5xl aspect-[16/9] animate-in zoom-in-95 duration-500">
-             <img src="/recruitment-page.png" alt="Recruitment" className="w-full h-full object-contain pointer-events-none" />
-             
-             <form onSubmit={handleSubmit} className="absolute inset-0">
-               {/* Invisible Input overlaying the drawn input field, starting after "YOUR NAME:" */}
-               <input
-                 required
-                 className="absolute top-[61%] left-[48%] w-[18%] h-[6.5%] bg-transparent border-none outline-none focus:ring-0 text-2xl font-body-md text-black px-2"
-                 type="text"
-                 value={recruitedName}
-                 onChange={(e) => setRecruitedName(e.target.value)}
-                 style={{
-                   fontFamily: "var(--font-limelight)",
-                 }}
-               />
-               
-               {/* Transparent button overlaying the drawn ACCEPT CASE button */}
-               <button
-                 className="absolute top-[72%] left-[41%] w-[18%] h-[8%] bg-transparent border-none cursor-pointer hover:bg-black/10 transition-colors rounded-xl"
-                 type="submit"
-               />
-             </form>
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-in fade-in duration-500"
+          style={{ backgroundColor: "#fdfaf5" }}>
+          <div className="relative w-full max-w-5xl animate-in zoom-in-95 duration-500" style={{ aspectRatio: "16/9" }}>
+            <img src="/recruitment-page.png" alt="Recruitment" className="w-full h-full object-contain pointer-events-none" />
+
+            <form onSubmit={handleSubmit} className="absolute inset-0">
+              <input
+                required
+                className="absolute top-[61%] left-[48%] w-[18%] h-[6.5%] bg-transparent border-none outline-none focus:ring-0 text-2xl text-stone-900 px-2"
+                type="text"
+                value={recruitedName}
+                onChange={(e) => setRecruitedName(e.target.value)}
+                style={{ fontFamily: "var(--font-special-elite), monospace", color: "#000000", fontWeight: "bold" }}
+              />
+              <button
+                className="absolute top-[72%] left-[41%] w-[18%] h-[8%] bg-transparent border-none cursor-pointer hover:bg-black/10 transition-colors rounded-xl"
+                type="submit"
+              />
+            </form>
           </div>
         </div>
       )}
