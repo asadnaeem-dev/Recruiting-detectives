@@ -300,40 +300,56 @@ export default function SwitchboardGame() {
       </div>
 
       {/* Single Hint */}
-      <p
-        className="mt-8 text-center"
-        style={{
-          fontFamily: "var(--font-playfair), serif",
-          color: "#e74c3c",
-          fontSize: "1.2rem",
-          letterSpacing: "0.06em",
-          fontStyle: "italic",
-        }}
-      >
-        Hint: red goes on the immediate left of green.
-      </p>
+      <div className="mt-8 flex justify-center w-full">
+        <p
+          className="animate-pulse inline-block"
+          style={{
+            fontFamily: "var(--font-special-elite), monospace",
+            color: "#e74c3c",
+            fontSize: "1.8rem",
+            letterSpacing: "0.06em",
+          }}
+        >
+          Red goes on the immediate left of green.
+        </p>
+      </div>
 
       {/* Success Registration State */}
       {isSolved && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-in fade-in duration-500"
-          style={{ backgroundColor: "#fdfaf5" }}>
-          <div className="relative w-full max-w-5xl animate-in zoom-in-95 duration-500" style={{ aspectRatio: "16/9" }}>
-            <img src="/recruitment-page.png" alt="Recruitment" className="w-full h-full object-contain pointer-events-none" />
+        <div className="fixed inset-0 z-50 flex flex-col items-center justify-center p-4 animate-in fade-in duration-500 overflow-y-auto"
+          style={{ backgroundColor: "#EAE3DA" }}>
+          
+          {/* Banner Image (you.png) at the top */}
+          <div className="w-full flex justify-center mb-4 mt-8">
+            <img src="/you.png" alt="You Are Recruited" className="max-w-[600px] w-full h-auto object-contain drop-shadow-md" />
+          </div>
 
-            <form onSubmit={handleSubmit} className="absolute inset-0">
-              <input
-                required
-                className="absolute top-[61%] left-[48%] w-[18%] h-[6.5%] bg-transparent border-none outline-none focus:ring-0 text-2xl text-stone-900 px-2"
-                type="text"
-                value={recruitedName}
-                onChange={(e) => setRecruitedName(e.target.value)}
-                style={{ fontFamily: "var(--font-special-elite), monospace", color: "#000000", fontWeight: "bold" }}
-              />
-              <button
-                className="absolute top-[72%] left-[41%] w-[18%] h-[8%] bg-transparent border-none cursor-pointer hover:bg-black/10 transition-colors rounded-xl"
-                type="submit"
-              />
-            </form>
+          <div className="flex flex-col items-center justify-center w-full max-w-6xl animate-in zoom-in-95 duration-500 pb-12">
+            
+            {/* Mouse Image with Form Overlay */}
+            <div className="relative inline-block max-w-[500px] w-full">
+              <img src="/mouse.png" alt="Agent Application" className="w-full h-auto object-contain" />
+              
+              <form onSubmit={handleSubmit} className="absolute inset-0">
+                {/* Input field next to "YOUR NAME:" */}
+                <input
+                  required
+                  className="absolute top-[61%] left-[37%] w-[60%] h-[10%] bg-transparent border-none outline-none focus:ring-0 text-2xl md:text-3xl text-stone-900 px-2 placeholder:text-stone-400"
+                  type="text"
+                  value={recruitedName}
+                  onChange={(e) => setRecruitedName(e.target.value)}
+                  style={{ fontFamily: "var(--font-special-elite), monospace", color: "#000000", fontWeight: "bold" }}
+                />
+                
+                {/* Invisible button over "ACCEPT CASE" drawn button */}
+                <button
+                  className="absolute top-[75%] left-[25%] w-[50%] h-[12%] bg-transparent border-none cursor-pointer outline-none"
+                  type="submit"
+                  title="Accept Case"
+                />
+              </form>
+            </div>
+            
           </div>
         </div>
       )}

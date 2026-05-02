@@ -65,7 +65,9 @@ export default function DashboardPage() {
         console.error("Failed to save score:", err);
       }
       setIsSubmitting(false);
-      router.push("/leaderboard");
+      setTimeout(() => {
+        router.push("/leaderboard");
+      }, 3000);
     } else {
       setGameState("lost");
     }
@@ -81,21 +83,17 @@ export default function DashboardPage() {
 
   if (gameState === "won") {
     return (
-      <div className="min-h-screen bg-[#fdfaf5] flex flex-col items-center justify-center p-8 text-center animate-in fade-in duration-1000">
-        <h1 className="text-6xl font-headline-lg text-green-700 mb-6 uppercase tracking-widest">Case Closed!</h1>
-        <p className="text-2xl font-body-lg text-stone-800 mb-8 max-w-2xl">
-          Excellent work, {detectiveName}. You spotted the contradiction: a bookmark cannot be wedged between pages 15 and 16 of a standard book, as they are printed on the front and back of the exact same page! Mr. Redacted was lying.
-        </p>
-        {isSubmitting ? (
-          <p className="text-xl font-special-elite text-stone-500 animate-pulse">Transmitting secure file to HQ...</p>
-        ) : (
-          <button
-            onClick={() => router.push("/leaderboard")}
-            className="bg-black text-white px-8 py-4 uppercase font-headline-md hover:bg-stone-800 transition-colors shadow-[4px_4px_0_0_#d32f2f]"
-          >
-            View Leaderboard
-          </button>
-        )}
+      <div className="min-h-screen flex flex-col items-center justify-center p-8 text-center" style={{ backgroundColor: "#EAE3DA" }}>
+        <h1 
+          className="animate-in fade-in zoom-in duration-1000 inline-block" 
+          style={{
+            fontFamily: "var(--font-special-elite), monospace",
+            fontSize: "4rem",
+            color: "#1a1a1a",
+          }}
+        >
+          Case solved.
+        </h1>
       </div>
     );
   }
@@ -120,7 +118,7 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col relative overflow-hidden" style={{ backgroundColor: "#fdfaf5" }}>
+    <div className="min-h-screen flex flex-col relative overflow-hidden" style={{ backgroundColor: "#EAE3DA" }}>
 
       {/* ── Header ── */}
       <header
@@ -191,50 +189,38 @@ export default function DashboardPage() {
         </div>
       </header>
 
-      {/* ── Full-bleed Seamless Case Files ── */}
-      <main className="flex-1 flex items-center justify-center p-6 md:p-10">
-        <div
-          className="grid grid-cols-3 gap-0 w-full max-w-6xl"
-          style={{
-            background: "#fdfaf5",
-          }}
-        >
-          {([1, 2, 3] as const).map((idx) => {
-            // Background positions for each third of testimonials.png
-            const bgPositions = ["0% 50%", "50% 50%", "100% 50%"];
-            return (
+      {/* ── Main Content ── */}
+      <main className="flex-1 flex flex-col items-center justify-start p-6 md:p-10 overflow-y-auto">
+        
+        {/* Banner Image (you.png) at the top */}
+        <div className="w-full flex justify-center mb-8 md:mb-12 mt-2">
+          <img src="/you.png" alt="You Are Recruited" className="max-w-[700px] w-full h-auto object-contain drop-shadow-md" />
+        </div>
+
+        <div className="flex flex-wrap justify-center gap-8 md:gap-12 w-full max-w-7xl">
+          {([1, 2, 3] as const).map((idx) => (
+            <div
+              key={idx}
+              onClick={() => setActiveFile(idx)}
+              title={`Open File ${idx.toString().padStart(2, "0")}`}
+              className="cursor-pointer transition-transform duration-300 hover:-translate-y-4 hover:scale-[1.02] hover:shadow-2xl hover:z-10 group relative w-full sm:w-[45%] lg:w-[30%] max-w-[380px]"
+            >
+              <img 
+                src={`/${idx}.png`} 
+                alt={`Case File ${idx}`} 
+                className="w-full h-auto object-contain drop-shadow-xl" 
+              />
+              
+              {/* Hover shimmer overlay */}
               <div
-                key={idx}
-                onClick={() => setActiveFile(idx)}
-                title={`Open File ${idx.toString().padStart(2, "0")}`}
-                className="cursor-pointer transition-all duration-300 group"
+                className="absolute inset-0 transition-opacity duration-300 opacity-0 group-hover:opacity-100 rounded-lg pointer-events-none"
                 style={{
-                  backgroundImage: "url('/testimonials.png')",
-                  backgroundSize: "300% 100%",
-                  backgroundPosition: bgPositions[idx - 1],
-                  aspectRatio: "3/4",
-                  position: "relative",
-                  overflow: "hidden",
+                  background: "linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 60%)",
+                  mixBlendMode: "overlay",
                 }}
-              >
-                {/* Hover shimmer overlay */}
-                <div
-                  className="absolute inset-0 transition-opacity duration-300 opacity-0 group-hover:opacity-100"
-                  style={{
-                    background: "linear-gradient(135deg, rgba(255,255,255,0.08) 0%, transparent 60%)",
-                    mixBlendMode: "overlay",
-                  }}
-                />
-                {/* Hover border glow */}
-                <div
-                  className="absolute inset-0 transition-opacity duration-300 opacity-0 group-hover:opacity-100"
-                  style={{
-                    boxShadow: "inset 0 0 0 2px rgba(180,140,60,0.3)",
-                  }}
-                />
-              </div>
-            );
-          })}
+              />
+            </div>
+          ))}
         </div>
       </main>
 

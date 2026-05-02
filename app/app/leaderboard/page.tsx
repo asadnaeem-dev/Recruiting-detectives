@@ -42,16 +42,22 @@ export default function LeaderboardPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-8 relative" style={{ backgroundColor: "#fdfaf5" }}>
+    <div className="min-h-screen flex flex-col items-center justify-center p-8 relative" style={{ backgroundColor: "#EAE3DA" }}>
       {/* Noir border frame */}
-      <div className="w-full max-w-3xl border-4 border-stone-900 p-8 md:p-12 relative shadow-[8px_8px_0_0_#1a1a1a] bg-[#fdfaf5]">
-        <h1 className="text-4xl md:text-5xl font-headline-lg text-stone-900 mb-8 text-center tracking-widest uppercase">
-          Top Detectives
+      <div className="w-full max-w-3xl border-4 border-stone-900 p-8 md:p-12 relative shadow-[8px_8px_0_0_#1a1a1a] bg-[#EAE3DA]">
+        <h1 
+          className="text-4xl md:text-5xl font-special-elite text-stone-900 mb-8 text-center tracking-widest animate-in fade-in zoom-in duration-1000 inline-block"
+        >
+          Top detectives
         </h1>
 
         {loading ? (
-          <div className="text-center py-12">
-            <p className="text-xl font-special-elite text-stone-500 animate-pulse">Retrieving classified records...</p>
+          <div className="text-center py-12 flex justify-center">
+            <p 
+              className="text-xl font-special-elite text-stone-500 animate-pulse inline-block"
+            >
+              Retrieving classified records...
+            </p>
           </div>
         ) : leaders.length === 0 ? (
           <div className="text-center py-12">
@@ -80,7 +86,7 @@ export default function LeaderboardPage() {
         <div className="mt-12 text-center">
           <button
             onClick={() => router.push("/")}
-            className="bg-stone-900 text-[#fdfaf5] px-8 py-3 uppercase font-headline-md hover:bg-red-800 transition-colors shadow-[4px_4px_0_0_#d32f2f]"
+            className="bg-stone-900 text-[#EAE3DA] px-8 py-3 uppercase font-headline-md hover:bg-red-800 transition-colors shadow-[4px_4px_0_0_#d32f2f]"
           >
             Play Again
           </button>
