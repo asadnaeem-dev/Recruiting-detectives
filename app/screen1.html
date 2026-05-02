@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Spline+Sans:wght@800&amp;family=Newsreader:ital,wght@0,400;0,600;1,400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-container": "#757060",
+                        "tertiary-fixed-dim": "#cdc6b3",
+                        "on-secondary-fixed-variant": "#494900",
+                        "on-tertiary-fixed": "#1f1c0f",
+                        "on-surface-variant": "#e4beba",
+                        "secondary-container": "#5c5d01",
+                        "on-secondary": "#323200",
+                        "surface-tint": "#ffb3ac",
+                        "on-tertiary-container": "#fdf5e0",
+                        "secondary-fixed": "#e8e883",
+                        "primary-container": "#d32f2f",
+                        "secondary": "#cbcb6a",
+                        "primary": "#ffb3ac",
+                        "error": "#ffb4ab",
+                        "on-tertiary": "#343023",
+                        "secondary-fixed-dim": "#cbcb6a",
+                        "inverse-surface": "#e5e2e1",
+                        "surface-bright": "#393939",
+                        "surface-container": "#20201f",
+                        "on-surface": "#e5e2e1",
+                        "on-secondary-fixed": "#1d1d00",
+                        "surface-variant": "#353535",
+                        "inverse-primary": "#ba1a20",
+                        "on-primary-fixed": "#410003",
+                        "tertiary": "#cdc6b3",
+                        "outline": "#ab8985",
+                        "surface-container-low": "#1c1b1b",
+                        "inverse-on-surface": "#313030",
+                        "error-container": "#93000a",
+                        "primary-fixed-dim": "#ffb3ac",
+                        "on-primary-fixed-variant": "#930010",
+                        "background": "#131313",
+                        "surface": "#131313",
+                        "on-error-container": "#ffdad6",
+                        "surface-container-high": "#2a2a2a",
+                        "surface-dim": "#131313",
+                        "surface-container-lowest": "#0e0e0e",
+                        "on-error": "#690005",
+                        "surface-container-highest": "#353535",
+                        "on-secondary-container": "#d6d674",
+                        "on-primary-container": "#fff2f0",
+                        "outline-variant": "#5b403d",
+                        "on-background": "#e5e2e1",
+                        "primary-fixed": "#ffdad6",
+                        "on-tertiary-fixed-variant": "#4b4738",
+                        "tertiary-fixed": "#eae2ce",
+                        "on-primary": "#680008"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "container-max": "1200px",
+                        "unit": "4px",
+                        "gutter": "24px",
+                        "margin": "32px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Spline Sans"],
+                        "headline-md": ["Spline Sans"],
+                        "label-sm": ["Newsreader"],
+                        "body-md": ["Newsreader"],
+                        "body-lg": ["Newsreader"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                        "headline-md": ["32px", {"lineHeight": "1.2", "fontWeight": "800"}],
+                        "label-sm": ["14px", {"lineHeight": "1.2", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .grainy-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.08;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+        .hard-shadow {
+            box-shadow: 8px 8px 0px 0px rgba(0,0,0,1);
+        }
+        .hard-shadow-small {
+            box-shadow: 4px 4px 0px 0px rgba(0,0,0,1);
+        }
+        .active-lever:active {
+            transform: translate(4px, 4px);
+            box-shadow: 0px 0px 0px 0px rgba(0,0,0,1);
+        }
+        .rubber-hose-bounce {
+            transform-origin: bottom;
+        }
+        .switchboard-wire {
+            stroke-width: 6;
+            stroke: #d32f2f;
+            fill: none;
+            stroke-linecap: round;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body-md selection:bg-primary-container selection:text-white overflow-x-hidden">
+<div class="grainy-overlay"></div>
+<!-- Top Navigation Shell -->
+<header class="sticky top-0 z-50 bg-stone-900 border-b-4 border-black shadow-[0_4px_0_0_rgba(0,0,0,1)] flex justify-between items-center w-full px-6 py-4 max-w-none">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-yellow-400 text-3xl">menu</span>
+<h1 class="text-yellow-400 font-black uppercase tracking-widest text-2xl drop-shadow-[4px_4px_0px_rgba(0,0,0,1)]">
+                The Frantic Switchboard
+            </h1>
+</div>
+<nav class="hidden md:flex gap-8 items-center">
+<a class="font-headline-md text-headline-md text-yellow-400 underline decoration-4 hover:skew-x-2 hover:scale-105 transition-transform" href="#">DASHBOARD</a>
+<a class="font-headline-md text-headline-md text-stone-400 hover:text-yellow-400 hover:skew-x-2 transition-transform" href="#">ARCHIVE</a>
+<span class="material-symbols-outlined text-yellow-400 text-3xl">search</span>
+</nav>
+</header>
+<main class="relative min-h-screen">
+<!-- Hero Section -->
+<section class="relative pt-24 pb-16 px-8 flex flex-col items-center text-center overflow-hidden">
+<!-- Background Silhouettes -->
+<div class="absolute inset-0 z-0 opacity-10 pointer-events-none">
+<img class="w-full h-full object-cover grayscale brightness-50" data-alt="A collection of rubber-hose style cartoon silhouettes of 1930s characters including a detective with a trench coat and a frantic operator. The scene is high contrast noir with heavy black shadows and sharp white highlights, reminiscent of early animation cells. Film grain and dust textures are visible throughout the composition." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAxT-ckTnv6WLanKFf05l_zpymPriQgsS9hoJS8KyXfiqdABdzofqbhEkhOFtzfKTvdhnt073h0T-p3kEd0IOtw9lqi5EChGJari3qSAZ0uPVeGKGPbzwBnTzzGaq1LAtR67HdOPbxHTUi0pPDGz7Nnc3vQ0SmifdISuosMw9ZffPBQtT90B9gRO1JJZrY96ma83XGQMptXJKFFf_lHBtRVCGMz9RK3W_dK7m3IX71ARj2E-ti9dvrp16TRVhTBm0BHH_QWzHFAbgqK"/>
+</div>
+<div class="relative z-10 max-w-4xl">
+<h2 class="font-headline-lg text-headline-lg text-primary uppercase mb-4 rubber-hose-bounce skew-y-[-2deg] drop-shadow-[6px_6px_0px_rgba(0,0,0,1)]">
+                    The Frantic Switchboard
+                </h2>
+<p class="font-body-lg text-headline-md text-tertiary-fixed italic border-y-2 border-primary-container py-2 inline-block">
+                    Connect the wires. Crack the case.
+                </p>
+</div>
+</section>
+<!-- The Switchboard Puzzle -->
+<section class="max-w-container-max mx-auto px-margin py-12">
+<div class="bg-stone-800 border-[3px] border-black hard-shadow p-8 rounded-none relative">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+<!-- Left Clues Panel -->
+<div class="space-y-4">
+<div class="bg-tertiary-container border-[3px] border-black p-4 rotate-[-1deg]">
+<h3 class="font-headline-md text-on-tertiary-container mb-2 uppercase border-b-2 border-black">The Clues</h3>
+<ul class="space-y-2 font-label-sm text-on-tertiary-container list-none">
+<li class="flex items-center gap-2">
+<span class="material-symbols-outlined">radio_button_checked</span>
+                                    The midnight whistle blows at Gate 4.
+                                </li>
+<li class="flex items-center gap-2">
+<span class="material-symbols-outlined">radio_button_checked</span>
+                                    Check the ledger under 'M'.
+                                </li>
+<li class="flex items-center gap-2">
+<span class="material-symbols-outlined">radio_button_checked</span>
+                                    Don't trust the lady in the red hat.
+                                </li>
+</ul>
+</div>
+<img class="w-full h-48 object-cover border-[3px] border-black hard-shadow-small grayscale contrast-125" data-alt="A vintage close-up of a 1930s typewriter with a half-written letter about a mystery. The lighting is dramatic noir style with deep shadows and high contrast sepia tones. A grainy film texture covers the image, creating a tactile historical feel. The composition is focused on the mechanical keys and the ink ribbon." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB7Xx4x2a-veudu4b-pzxDzh8rTP3oxoMK9X0GSdX9858CGxlBs0Zmm4u90OUYwFtnU5BxohUhFaqPgsqXns5i3vVOndEdWc7pQeNC-FXLeWsyF0HPLkEKnaCg2z76eYSrRuKCs7eUIci5PLIDd_Yg6CmhtGkK79FZbQgSA2DyWI_CzUKfQm09K8e5T0BY48dHqlhhIDr8ssuIpbVl8yo34rPOpBAR7PyX1ReYOL0Fq4tN3VgMz_RtXSijkf56RG41_tcrPBlerYCit"/>
+</div>
+<!-- Main Switchboard Hub -->
+<div class="md:col-span-2 bg-stone-900 border-[3px] border-black p-6 relative">
+<div class="flex justify-between items-center mb-8">
+<span class="text-primary font-headline-md">STATUS: FRANTIC</span>
+<div class="flex gap-2">
+<div class="w-4 h-4 rounded-full bg-primary-container border-2 border-black animate-pulse"></div>
+<div class="w-4 h-4 rounded-full bg-on-tertiary border-2 border-black"></div>
+</div>
+</div>
+<!-- Ports Grid -->
+<div class="grid grid-cols-4 sm:grid-cols-6 gap-6 justify-items-center mb-12">
+<!-- Generate Ports -->
+<div class="group relative">
+<div class="w-12 h-12 bg-black border-[3px] border-stone-600 rounded-full flex items-center justify-center hover:border-primary cursor-pointer active:scale-95 transition-all">
+<div class="w-4 h-4 bg-stone-800 rounded-full border-2 border-black"></div>
+</div>
+<span class="absolute -bottom-6 left-1/2 -translate-x-1/2 text-[10px] font-mono text-stone-500">LINE-01</span>
+</div>
+<div class="group relative">
+<div class="w-12 h-12 bg-black border-[3px] border-stone-600 rounded-full flex items-center justify-center hover:border-primary cursor-pointer active:scale-95 transition-all">
+<div class="w-4 h-4 bg-stone-800 rounded-full border-2 border-black"></div>
+</div>
+<span class="absolute -bottom-6 left-1/2 -translate-x-1/2 text-[10px] font-mono text-stone-500">WAREHOUSE</span>
+</div>
+<div class="group relative">
+<div class="w-12 h-12 bg-black border-[3px] border-stone-600 rounded-full flex items-center justify-center border-primary cursor-pointer active:scale-95 transition-all">
+<div class="w-4 h-4 bg-primary rounded-full border-2 border-black"></div>
+</div>
+<span class="absolute -bottom-6 left-1/2 -translate-x-1/2 text-[10px] font-mono text-primary">OFFICE</span>
+</div>
+<!-- More Ports as visual fillers -->
+<div class="w-12 h-12 bg-black border-[3px] border-stone-600 rounded-full flex items-center justify-center"></div>
+<div class="w-12 h-12 bg-black border-[3px] border-stone-600 rounded-full flex items-center justify-center"></div>
+<div class="w-12 h-12 bg-black border-[3px] border-stone-600 rounded-full flex items-center justify-center"></div>
+</div>
+<!-- Dangling Cables SVG -->
+<svg class="absolute top-0 left-0 w-full h-full pointer-events-none opacity-80" viewbox="0 0 600 400">
+<path class="switchboard-wire" d="M 100 200 Q 150 350 250 200"></path>
+<path class="switchboard-wire stroke-secondary" d="M 350 150 Q 400 300 450 150"></path>
+<path class="switchboard-wire stroke-tertiary opacity-40" d="M 500 100 Q 550 400 580 120"></path>
+</svg>
+<div class="mt-12 p-4 border-2 border-stone-700 bg-black/40 text-sm font-mono text-stone-400">
+                            SYSTEM LOG: AWAITING CONNECTION AT PORT 'GALLOWS'...
+                        </div>
+</div>
+</div>
+</div>
+</section>
+<!-- Entry Form Section -->
+<section class="max-w-2xl mx-auto px-8 py-20">
+<div class="bg-tertiary-fixed-dim border-[4px] border-black hard-shadow p-10 relative overflow-hidden">
+<div class="absolute top-0 right-0 p-4 rotate-12">
+<span class="text-4xl text-primary-container font-black">CONFIDENTIAL</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-black mb-6 uppercase">Register Your Alias</h3>
+<form class="space-y-8">
+<div>
+<label class="block text-black font-label-sm uppercase mb-2">Detective Identification</label>
+<input class="w-full bg-stone-100 border-x-0 border-t-0 border-b-[4px] border-black text-2xl font-body-lg p-2 focus:ring-0 focus:border-primary-container transition-colors placeholder:text-stone-300" placeholder="e.g. S. SPADE" type="text"/>
+</div>
+<div class="flex items-center gap-6">
+<button class="active-lever group flex items-center gap-4 bg-primary-container border-[3px] border-black px-10 py-6 hard-shadow-small transition-all" type="submit">
+<span class="font-headline-md text-headline-md text-white uppercase tracking-widest">Submit Case</span>
+<span class="material-symbols-outlined text-4xl text-white group-hover:rotate-45 transition-transform">settings_input_component</span>
+</button>
+<div class="flex-1 text-black font-label-sm italic opacity-70">
+                            * Fingerprints will be kept on file for 72 hours.
+                        </div>
+</div>
+</form>
+</div>
+</section>
+<!-- Floating Action Button -->
+<button class="fixed bottom-10 right-10 w-16 h-16 bg-yellow-400 border-[3px] border-black rounded-full flex items-center justify-center hard-shadow-small hover:scale-110 active:scale-95 transition-all z-40">
+<span class="material-symbols-outlined text-black text-3xl">help</span>
+</button>
+</main>
+<!-- Footer Shell -->
+<footer class="bg-stone-950 border-t-4 border-black flex flex-col md:flex-row justify-between items-center px-8 py-12 w-full gap-8">
+<div class="flex flex-col items-center md:items-start gap-2">
+<h4 class="text-stone-400 font-bold uppercase tracking-widest">The Frantic Switchboard</h4>
+<p class="font-mono text-xs uppercase tracking-tighter text-stone-500">© 1934 THE FRANTIC SWITCHBOARD - PROPERTY OF THE CITY</p>
+</div>
+<div class="flex gap-8">
+<a class="font-mono text-xs uppercase tracking-tighter text-stone-600 hover:text-yellow-400 hover:italic" href="#">The Case File</a>
+<a class="font-mono text-xs uppercase tracking-tighter text-stone-600 hover:text-yellow-400 hover:italic" href="#">The Archive</a>
+<a class="font-mono text-xs uppercase tracking-tighter text-stone-600 hover:text-yellow-400 hover:italic" href="#">The Wire</a>
+</div>
+<div class="flex gap-4">
+<span class="material-symbols-outlined text-stone-600 cursor-pointer hover:text-primary transition-colors">public</span>
+<span class="material-symbols-outlined text-stone-600 cursor-pointer hover:text-primary transition-colors">history</span>
+<span class="material-symbols-outlined text-stone-600 cursor-pointer hover:text-primary transition-colors">shield</span>
+</div>
+</footer>
+</body></html>

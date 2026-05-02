@@ -1,0 +1,95 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-tertiary-container: #757060;
+  --color-tertiary-fixed-dim: #cdc6b3;
+  --color-on-secondary-fixed-variant: #494900;
+  --color-on-tertiary-fixed: #1f1c0f;
+  --color-on-surface-variant: #e4beba;
+  --color-secondary-container: #5c5d01;
+  --color-on-secondary: #323200;
+  --color-surface-tint: #ffb3ac;
+  --color-on-tertiary-container: #fdf5e0;
+  --color-secondary-fixed: #e8e883;
+  --color-primary-container: #d32f2f;
+  --color-secondary: #cbcb6a;
+  --color-primary: #ffb3ac;
+  --color-error: #ffb4ab;
+  --color-on-tertiary: #343023;
+  --color-secondary-fixed-dim: #cbcb6a;
+  --color-inverse-surface: #e5e2e1;
+  --color-surface-bright: #393939;
+  --color-surface-container: #20201f;
+  --color-on-surface: #e5e2e1;
+  --color-on-secondary-fixed: #1d1d00;
+  --color-surface-variant: #353535;
+  --color-inverse-primary: #ba1a20;
+  --color-on-primary-fixed: #410003;
+  --color-tertiary: #cdc6b3;
+  --color-outline: #ab8985;
+  --color-surface-container-low: #1c1b1b;
+  --color-inverse-on-surface: #313030;
+  --color-error-container: #93000a;
+  --color-primary-fixed-dim: #ffb3ac;
+  --color-on-primary-fixed-variant: #930010;
+  --color-background: #131313;
+  --color-surface: #131313;
+  --color-on-error-container: #ffdad6;
+  --color-surface-container-high: #2a2a2a;
+  --color-surface-dim: #131313;
+  --color-surface-container-lowest: #0e0e0e;
+  --color-on-error: #690005;
+  --color-surface-container-highest: #353535;
+  --color-on-secondary-container: #d6d674;
+  --color-on-primary-container: #fff2f0;
+  --color-outline-variant: #5b403d;
+  --color-on-background: #e5e2e1;
+  --color-primary-fixed: #ffdad6;
+  --color-on-tertiary-fixed-variant: #4b4738;
+  --color-tertiary-fixed: #eae2ce;
+  --color-on-primary: #680008;
+
+  --font-headline-lg: "Spline Sans", sans-serif;
+  --font-headline-md: "Spline Sans", sans-serif;
+  --font-label-sm: "Newsreader", serif;
+  --font-body-md: "Newsreader", serif;
+  --font-body-lg: "Newsreader", serif;
+  
+  --spacing-container-max: 1200px;
+  --spacing-gutter: 24px;
+  --spacing-margin: 32px;
+}
+
+body {
+    background-color: var(--color-background);
+    color: var(--color-on-background);
+    min-height: max(884px, 100dvh);
+}
+
+.grainy-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.08;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+.hard-shadow {
+    box-shadow: 8px 8px 0px 0px rgba(0,0,0,1);
+}
+.hard-shadow-small {
+    box-shadow: 4px 4px 0px 0px rgba(0,0,0,1);
+}
+.active-lever:active {
+    transform: translate(4px, 4px);
+    box-shadow: 0px 0px 0px 0px rgba(0,0,0,1);
+}
+.rubber-hose-bounce {
+    transform-origin: bottom;
+}
+.switchboard-wire {
+    stroke-width: 6;
+    stroke: #d32f2f;
+    fill: none;
+    stroke-linecap: round;
+}
