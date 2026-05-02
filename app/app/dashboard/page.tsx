@@ -67,7 +67,7 @@ export default function DashboardPage() {
       setIsSubmitting(false);
       setTimeout(() => {
         router.push("/leaderboard");
-      }, 3000);
+      }, 1200);
     } else {
       setGameState("lost");
     }
